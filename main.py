@@ -4,6 +4,9 @@ from model import Qna_System
 from fastapi.middleware.cors import CORSMiddleware
 from model import __version__ as model_version
 import json
+import uvicorn
+from CosineSimilarity import CosineSimilarity
+
 
 app = FastAPI()
 origins = ["*"]
@@ -21,17 +24,27 @@ class TextIn(BaseModel):
 
 class TextOut(BaseModel):
     text: str
+    similar_docs: list[str] = []
 
 @app.get("/")
 def home():
     return {"health_check": "OK", "version": model_version}
 
 @app.post("/answer", response_model=TextOut)
-def answer(text: TextIn):
+async def answer(text: TextIn):
     input_data = text.json()
     input_dictionary = json.loads(input_data)
-    qna = Qna_System("abstractive-question-answering")
     query = input_dictionary["text"]
-    print(query)
+    # print(query)
+    qna = Qna_System("abstractive-question-answering")
+    cs = CosineSimilarity(query)
+
+    ls = []
+    for doc in cs.get_similar_documents():
+        ls.append(doc[0]+" : "+doc[1])
     answer = qna.generate_answer(query)
-    return {"text": answer}
+    return {"text": answer, "similar_docs": ls}
+
+
+if __name__ == "__main__":
+    uvicorn.run("app:main", host="0.0.0.0", port=8000, reload=True)
