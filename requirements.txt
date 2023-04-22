@@ -1,0 +1,6 @@
+fastapi==0.95.1
+pinecone_client==2.2.1
+pydantic==1.10.2
+sentence_transformers==2.2.2
+torch==1.13.0
+transformers==4.24.0
