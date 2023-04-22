@@ -7,7 +7,7 @@ import pprint as pprint
 
 __version__="0.0.1"
 # Connect to Pinecone
-API_KEY="e193a76c-d585-49fe-b789-2ecf7caa7067"
+API_KEY="API_KEY"
 ENV="us-west4-gcp"
 pinecone.init(api_key=API_KEY, environment=ENV)
 
